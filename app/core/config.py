@@ -18,13 +18,26 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALGORITHM: str = "HS256"
 
-    STORAGE_DIR: str = "/code/storage"
     AUDIO_DOWNLOAD_DIR: str = "/code/storage/music"
+
+    MODELS_DIR: str = "/code/models"
+
+    WHISPER_MODEL_ID: str = "openai/whisper-small"
+    GENRE_MODEL_ID: str = "m3hrdadfi/wav2vec2-base-100k-gtzan-music-genres"
+    MOOD_MODEL_ID: str = "Zharova/mood_model"
+
+    WHISPER_MODEL_PATH: str = "/code/models/whisper"
+    GENRE_MODEL_PATH: str = "/code/models/m3hrdadfi-wav2vec"
+    MOOD_MODEL_PATH: str = "/code/models/mood_model"
 
     SPOTIFY_CLIENT_ID: str
     SPOTIFY_CLIENT_SECRET: str
     FFMPEG_PATH: str | None = None
     YT_COOKIES_FILE: str | None = None
+
+    WHISPER_CHUNK_LENGTH_SEC: int = 30
+    WHISPER_OVERLAP_SEC: int = 5
+    HUGGING_FACE_TOKEN: str
 
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:

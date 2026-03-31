@@ -2,3 +2,6 @@
 .cache
 *.mako
 /storage
+/frontend/node_modules
+models/*
+!models/.gitkeep

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import String, Text, ForeignKey, DateTime, Integer, Float, Boolean
+from sqlalchemy import String, Text, ForeignKey, DateTime, Integer, Float, Boolean, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base_class import Base
@@ -67,11 +67,14 @@ class AnalysisResult(Base):
     track_id: Mapped[int] = mapped_column(ForeignKey("tracks.id"), unique=True, nullable=False)
 
     transcription: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     genre: Mapped[str | None] = mapped_column(String(100), nullable=True)
     genre_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    top_genres: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     mood: Mapped[str | None] = mapped_column(String(100), nullable=True)
     mood_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    top_moods: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 

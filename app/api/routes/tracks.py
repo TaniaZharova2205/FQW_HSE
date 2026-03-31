@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
@@ -9,10 +10,19 @@ from app.services.track_service import (
     create_spotify_track,
     create_uploaded_track,
     get_track_by_id,
+    get_tracks_by_user_id,
 )
 from app.utils.files import save_upload_file
 
 router = APIRouter(prefix="/tracks", tags=["tracks"])
+
+
+@router.get("", response_model=List[TrackRead])
+def list_tracks(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return get_tracks_by_user_id(db, current_user.id)
 
 
 @router.post("/upload", response_model=TrackCreateResponse, status_code=status.HTTP_201_CREATED)

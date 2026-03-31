@@ -41,6 +41,15 @@ def get_track_by_id(db: Session, track_id: int) -> Track | None:
     return db.query(Track).filter(Track.id == track_id).first()
 
 
+def get_tracks_by_user_id(db: Session, user_id: int) -> list[Track]:
+    return (
+        db.query(Track)
+        .filter(Track.user_id == user_id)
+        .order_by(Track.created_at.desc())
+        .all()
+    )
+
+
 def update_track_metadata_and_audio(
     db: Session,
     track: Track,

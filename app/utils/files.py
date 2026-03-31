@@ -7,7 +7,7 @@ from app.core.config import settings
 
 
 def ensure_storage_dir() -> Path:
-    storage_path = Path(settings.STORAGE_DIR)
+    storage_path = Path(settings.AUDIO_DOWNLOAD_DIR)
     storage_path.mkdir(parents=True, exist_ok=True)
     return storage_path
 
