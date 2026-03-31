@@ -1,5 +1,0 @@
-sp_cl = e666123d5e784fed8cabe3a172bc18
-sp_pas = 5ff80f91be2b42e48088f4da7ba30b
-hf = jBrmOUigoSWWLCuXLnNLlwBJgFjpOKEU
-seckey = fe8b89bd1e7c1afcf9dbb4e7a401f711d723ab08be3da7580f1654641ae9e3
-VITE_API_URL=http://localhost:8000/api/v1 #создать .env в frontend\.env

@@ -13,6 +13,8 @@ from app.services.track_service import (
     get_tracks_by_user_id,
 )
 from app.utils.files import save_upload_file
+from app.schemas.history import TrackHistoryItem
+from app.services.history_service import get_user_analysis_history
 
 router = APIRouter(prefix="/tracks", tags=["tracks"])
 
@@ -78,7 +80,15 @@ def create_track_from_spotify(
         job_id=job.id,
         status=job.status,
     )
+    
 
+@router.get("/history", response_model=list[TrackHistoryItem])
+def get_tracks_history(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return get_user_analysis_history(db, current_user.id)
+    
 
 @router.get("/{track_id}", response_model=TrackRead)
 def get_track(

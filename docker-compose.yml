@@ -11,6 +11,9 @@ services:
 
   api:
     build: .
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     container_name: music_api
     command: sh -c "python -m scripts.wait_for_models && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     ports:
@@ -28,6 +31,9 @@ services:
 
   worker:
     build: .
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     container_name: music_worker
     command: sh -c "python -m scripts.wait_for_models && python -m app.workers.run_worker"
     env_file:
@@ -36,6 +42,7 @@ services:
       - ./:/code
       - ./storage:/code/storage
       - ./models:/code/models
+      - ./cookies.txt:/code/cookies.txt
     depends_on:
       - model-init
       - postgres

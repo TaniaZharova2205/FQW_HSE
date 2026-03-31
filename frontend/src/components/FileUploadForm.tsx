@@ -38,7 +38,7 @@ export default function FileUploadForm({ onSuccess }: Props) {
 
   return (
     <form className="card" onSubmit={handleSubmit}>
-      <div className="badge">upload your vibe 🎧</div>
+      <div className="badge">Загрузи свой файл, бэйб 🎧</div>
       <h3 className="form-title">Загрузить аудиофайл</h3>
       <p className="form-subtitle">
         Поддерживаются mp3, wav, ogg, flac, m4a.

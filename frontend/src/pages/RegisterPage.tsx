@@ -34,7 +34,7 @@ export default function RegisterPage() {
   return (
     <Layout>
       <div className="auth-card">
-        <span className="page-kicker">create your pink universe 💗</span>
+        <span className="page-kicker">Создай свою вселенную музыки 💗</span>
         <h1>Регистрация</h1>
         <p className="muted">Создай аккаунт и начни собирать свою историю анализов.</p>
         <div className="divider-soft" />

@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <Layout>
       <div className="auth-card">
-        <span className="page-kicker">welcome back angel ✨</span>
+        <span className="page-kicker">Добро пожаловать назад, мой падший ангел ✨</span>
         <h1>Вход</h1>
         <p className="muted">Войди в аккаунт и продолжай анализировать музыку.</p>
         <div className="divider-soft" />

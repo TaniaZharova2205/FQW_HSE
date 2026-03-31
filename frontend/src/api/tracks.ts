@@ -1,5 +1,5 @@
 import { apiRequest } from "./client";
-import type { Track, TrackCreateResponse } from "../types";
+import type { Track, TrackCreateResponse, TrackHistoryItem } from "../types";
 import { getToken } from "../utils/storage";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -47,4 +47,8 @@ export async function getTrack(trackId: number): Promise<Track> {
 
 export async function getTracks(): Promise<Track[]> {
   return apiRequest<Track[]>("/tracks", { method: "GET" }, true);
+}
+
+export async function getTracksHistory(): Promise<TrackHistoryItem[]> {
+  return apiRequest<TrackHistoryItem[]>("/tracks/history", { method: "GET" }, true);
 }

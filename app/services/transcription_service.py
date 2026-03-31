@@ -2,10 +2,11 @@ import re
 from pathlib import Path
 
 import torch
+import torchaudio
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 
 from app.core.config import settings
-import librosa
+
 
 class TranscriptionError(Exception):
     pass
@@ -36,7 +37,10 @@ class TranscriptionService:
             settings.WHISPER_MODEL_PATH,
             local_files_only=True,
         )
+
         self._model.config.forced_decoder_ids = None
+        self._model.generation_config.forced_decoder_ids = None
+
         self._model.to(self._device)
         self._model.eval()
 
@@ -54,20 +58,30 @@ class TranscriptionService:
 
     @staticmethod
     def load_audio(audio_path: str) -> tuple[torch.Tensor, int]:
-        try:
-            audio, sample_rate = librosa.load(audio_path, sr=16000, mono=True)
-            waveform = torch.tensor(audio).unsqueeze(0)
-            return waveform, sample_rate
+        path = Path(audio_path)
+        if not path.exists():
+            raise TranscriptionError(f"Audio file not found: {audio_path}")
 
-        except Exception as e:
-            raise TranscriptionError(f"Failed to load audio: {e}")
+        waveform, sample_rate = torchaudio.load(str(path))
+
+        if waveform.shape[0] > 1:
+            waveform = torch.mean(waveform, dim=0, keepdim=True)
+
+        if sample_rate != 16000:
+            resampler = torchaudio.transforms.Resample(
+                orig_freq=sample_rate,
+                new_freq=16000,
+            )
+            waveform = resampler(waveform)
+            sample_rate = 16000
+
+        return waveform, sample_rate
 
     @staticmethod
     def detect_language_hint(track_title: str | None = None, artist: str | None = None) -> str | None:
         text = f"{artist or ''} {track_title or ''}".lower()
 
-        cyrillic_pattern = re.compile(r"[а-яё]")
-        if cyrillic_pattern.search(text):
+        if re.search(r"[а-яё]", text):
             return "ru"
 
         return None
@@ -101,32 +115,37 @@ class TranscriptionService:
 
         with torch.no_grad():
             for chunk in chunks:
-                input_features = self.processor(
+                processed = self.processor(
                     chunk.squeeze().numpy(),
                     sampling_rate=sample_rate,
                     return_tensors="pt",
-                ).input_features.to(self.device)
+                )
 
-                input_features = input_features.to(self.model.dtype)
+                input_features = processed.input_features.to(self.device)
+
+                attention_mask = None
+                if hasattr(processed, "attention_mask") and processed.attention_mask is not None:
+                    attention_mask = processed.attention_mask.to(self.device)
 
                 generate_kwargs = {
-                    "num_beams": 5,
+                    "input_features": input_features,
                     "task": "transcribe",
+                    "num_beams": 5,
                 }
+
+                if attention_mask is not None:
+                    generate_kwargs["attention_mask"] = attention_mask
 
                 if language:
                     generate_kwargs["language"] = language
-                    generate_kwargs["forced_decoder_ids"] = self.processor.get_decoder_prompt_ids(
-                        language=language,
-                        task="transcribe",
-                    )
 
-                predicted_ids = self.model.generate(
-                    input_features,
-                    **generate_kwargs,
-                )
+                predicted_ids = self.model.generate(**generate_kwargs)
 
-                text = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)[0].strip()
+                text = self.processor.batch_decode(
+                    predicted_ids,
+                    skip_special_tokens=True,
+                )[0].strip()
+
                 if text:
                     transcriptions.append(text)
 

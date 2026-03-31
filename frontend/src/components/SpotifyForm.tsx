@@ -34,7 +34,7 @@ export default function SpotifyForm({ onSuccess }: Props) {
 
   return (
     <form className="card" onSubmit={handleSubmit}>
-      <div className="badge">spotify goddess mode 💖</div>
+      <div className="badge">Режим богини spotify 💋</div>
       <h3 className="form-title">Ссылка Spotify</h3>
       <p className="form-subtitle">
         Вставь ссылку на трек, а дальше система сама всё сделает.

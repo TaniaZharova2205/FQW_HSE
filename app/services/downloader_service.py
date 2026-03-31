@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-
+import socket
 import yt_dlp
 
 from app.core.config import settings
@@ -21,7 +21,16 @@ class DownloaderService:
         sanitized = "".join("_" if ch in forbidden else ch for ch in name)
         return sanitized.strip().rstrip(".")
 
+    @staticmethod
+    def check_dns(host: str = "www.youtube.com") -> None:
+        try:
+            socket.gethostbyname(host)
+        except Exception as e:
+            raise AudioDownloadError(f"DNS resolution failed for {host}: {e}") from e
+
     def download_by_search(self, query: str) -> str:
+        self.check_dns()
+
         safe_name = self.sanitize_filename(query)
         output_template = str(self.download_dir / f"{safe_name}.%(ext)s")
 
@@ -39,12 +48,13 @@ class DownloaderService:
             "default_search": "ytsearch",
             "noplaylist": True,
             "extract_flat": False,
+            "verbose": True,
         }
 
         if settings.YT_COOKIES_FILE and os.path.exists(settings.YT_COOKIES_FILE):
             ydl_opts["cookiefile"] = settings.YT_COOKIES_FILE
 
-        if settings.FFMPEG_PATH and os.path.exists(settings.FFMPEG_PATH):
+        if settings.FFMPEG_PATH:
             ydl_opts["ffmpeg_location"] = settings.FFMPEG_PATH
 
         try:
@@ -59,7 +69,6 @@ class DownloaderService:
                     requested_title = info.get("title") or safe_name
 
                 final_mp3 = self.download_dir / f"{self.sanitize_filename(requested_title)}.mp3"
-
                 if final_mp3.exists():
                     return str(final_mp3)
 

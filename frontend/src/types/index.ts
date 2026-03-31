@@ -63,3 +63,34 @@ export interface ApiError {
   status?: number;
   message: string;
 }
+
+export interface PredictionItem {
+  label: string;
+  score: number;
+}
+
+export interface TrackHistoryItem {
+  track_id: number;
+  artist: string | null;
+  title: string | null;
+  source_type: string;
+  original_filename: string | null;
+  spotify_url: string | null;
+
+  job_id: number | null;
+  job_status: string | null;
+  job_progress: number | null;
+  job_error_message: string | null;
+
+  transcription: string | null;
+
+  genre: string | null;
+  genre_confidence: number | null;
+  top_genres: PredictionItem[] | null;
+
+  mood: string | null;
+  mood_confidence: number | null;
+  top_moods: PredictionItem[] | null;
+
+  created_at: string;
+}
