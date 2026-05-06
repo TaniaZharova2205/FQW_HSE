@@ -12,12 +12,12 @@ email-validator==2.3.0
 alembic==1.18.4
 spotipy==2.26.0
 yt-dlp>=2026.03.17
-torch==2.6.0
+# torch==2.6.0
 transformers==4.51.3
 torchcodec==0.10.0
 librosa==0.11.0
 soundfile==0.13.1
-torchaudio==2.6.0
+# torchaudio==2.6.0
 accelerate==0.28.0
 safetensors==0.5.3
 huggingface_hub[hf_xet]==0.30.2

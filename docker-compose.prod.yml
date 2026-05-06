@@ -1,0 +1,71 @@
+services:
+  model-init:
+    build: .
+    command: python -m scripts.bootstrap_models
+    env_file:
+      - .env
+    volumes:
+      - models:/code/models
+
+  api:
+    build: .
+    command: sh -c "python -m scripts.wait_for_models && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    env_file:
+      - .env
+    volumes:
+      - storage:/code/storage
+      - models:/code/models
+    depends_on:
+      - model-init
+      - postgres
+      - redis
+    restart: always
+
+  worker:
+    build: .
+    command: sh -c "python -m scripts.wait_for_models && python -m app.workers.run_worker"
+    env_file:
+      - .env
+    volumes:
+      - storage:/code/storage
+      - models:/code/models
+      - ./cookies.txt:/code/cookies.txt:ro
+    depends_on:
+      - model-init
+      - postgres
+      - redis
+    restart: always
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: always
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: music_analyzer
+      POSTGRES_USER: music_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: always
+
+volumes:
+  postgres_data:
+  storage:
+  models:
