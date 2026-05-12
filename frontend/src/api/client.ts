@@ -3,6 +3,38 @@ import type { ApiError } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+function getErrorMessage(data: unknown): string {
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    "detail" in data
+  ) {
+    const detail = (data as { detail: unknown }).detail;
+
+    if (typeof detail === "string") {
+      return detail;
+    }
+
+    if (Array.isArray(detail)) {
+      return detail
+        .map((item) => {
+          if (
+            typeof item === "object" &&
+            item !== null &&
+            "msg" in item
+          ) {
+            return String((item as { msg: unknown }).msg).replace(/^Value error,\s*/i, "");
+          }
+
+          return String(item);
+        })
+        .join("\n");
+    }
+  }
+
+  return "Ошибка запроса";
+}
+
 export async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
@@ -28,10 +60,11 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    let message = "Request failed";
+    let message = "Ошибка запроса";
+
     try {
       const data = await response.json();
-      message = data.detail || message;
+      message = getErrorMessage(data);
     } catch {
       //
     }
@@ -40,6 +73,7 @@ export async function apiRequest<T>(
       status: response.status,
       message
     };
+
     throw error;
   }
 

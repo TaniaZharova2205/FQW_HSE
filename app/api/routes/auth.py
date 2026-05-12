@@ -16,7 +16,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     existing_user = get_user_by_email(db, data.email)
     if existing_user:
-        raise HTTPException(status_code=400, detail="User with this email already exists")
+        raise HTTPException(status_code=400, detail="Пользователь с таким email уже существует")
 
     user = create_user(db, data.email, data.password)
     return user
@@ -28,7 +28,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Неверный email или пароль",
         )
 
     access_token = create_access_token(subject=user.id)

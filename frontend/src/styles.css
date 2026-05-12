@@ -520,3 +520,16 @@ button {
     width: 100%;
   }
 }
+
+.form-error {
+  margin: 6px 0 10px;
+  color: #ff5c7a;
+  font-size: 14px;
+}
+
+.password-hint {
+  margin: 8px 0 16px;
+  color: var(--muted-color, #8b8b8b);
+  font-size: 13px;
+  line-height: 1.4;
+}
