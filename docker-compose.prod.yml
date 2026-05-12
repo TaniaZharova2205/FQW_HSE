@@ -29,7 +29,7 @@ services:
     volumes:
       - storage:/code/storage
       - models:/code/models
-      - ./cookies.txt:/code/cookies.txt:ro
+      - ./cookies.txt:/code/cookies.txt
     depends_on:
       - model-init
       - postgres

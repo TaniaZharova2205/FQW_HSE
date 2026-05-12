@@ -43,6 +43,8 @@ def update_job(
 
 
 def process_spotify_track(db: Session, job: AnalysisJob, track: Track) -> None:
+    if not track.spotify_url:
+        raise ValueError("Spotify URL is missing")
     spotify_service = SpotifyService()
     downloader = DownloaderService()
 

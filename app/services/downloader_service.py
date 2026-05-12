@@ -49,6 +49,10 @@ class DownloaderService:
             "noplaylist": True,
             "extract_flat": False,
             "verbose": True,
+            "cookiefile": "/code/cookies.txt",
+            "js_runtimes": {
+                "node": {}
+            },
         }
 
         if settings.YT_COOKIES_FILE and os.path.exists(settings.YT_COOKIES_FILE):
