@@ -5,6 +5,26 @@ interface Props {
   result: AnalysisResult;
 }
 
+function getTrackDisplayTitle(track: Track): string {
+  if (track.artist && track.title) {
+    return `${track.artist} — ${track.title}`;
+  }
+
+  if (track.source_type === "upload" && track.original_filename) {
+    return track.original_filename.replace(/\.[^/.]+$/, "");
+  }
+
+  if (track.title) {
+    return track.title;
+  }
+
+  if (track.artist) {
+    return track.artist;
+  }
+
+  return "Unknown track";
+}
+
 function PredictionList({
   title,
   items
@@ -38,7 +58,7 @@ export default function ResultCard({ track, result }: Props) {
     <div className="card">
       <span className="page-kicker">analysis complete 💞</span>
       <h2>
-        {track.artist || "Unknown artist"} — {track.title || "Unknown track"}
+        {getTrackDisplayTitle(track)}
       </h2>
 
       <p className="muted"><strong>Источник:</strong> {track.source_type}</p>
