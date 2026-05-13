@@ -237,6 +237,7 @@ scripts/                     # скрипты (bootstrap моделей, ожи�
 alembic.ini                  # конфигурация миграций Alembic
 cookies.txt                  # cookies для yt-dlp 
 docker-compose.yml           # оркестрация всех сервисов
+docker-compose.prod.yml      # оркестрация всех сервисов для использования в проде
 DockerFile                   # сборка backend/worker контейнера
 requirements.txt             # зависимости Python
 ```
