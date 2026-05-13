@@ -24,12 +24,12 @@
 
 Проект построен по микросервисной архитектуре:
 
-- **API (FastAPI)** — обработка запросов
-- **Worker** — выполнение ML-задач
-- **Frontend (React)** — пользовательский интерфейс
-- **PostgreSQL** — база данных
-- **Redis** — очередь задач
-- **Docker Compose** — оркестрация
+- **API (FastAPI)** - обработка запросов
+- **Worker** - выполнение ML-задач
+- **Frontend (React)** - пользовательский интерфейс
+- **PostgreSQL** - база данных
+- **Redis** - очередь задач
+- **Docker Compose** - оркестрация
 
 ---
 
@@ -46,9 +46,9 @@
 ### Machine Learning
 
 - Transformers (Hugging Face)
-- Whisper — распознавание речи
-- Wav2Vec2 — определение жанра
-- Text Classification — определение настроения
+- Whisper - распознавание речи
+- Wav2Vec2 - определение жанра
+- Text Classification - определение настроения
 
 ### Frontend
 
