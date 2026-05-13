@@ -171,8 +171,8 @@ docker compose exec api alembic upgrade head
 ## Доступ
 
 - Frontend: <http://localhost:3000>
-- API: <http://localhost:8000>
-- Swagger: <http://localhost:8000/docs>
+- API: <http://localhost:8000>(не доступно в проде)
+- Swagger: <http://localhost:8000/docs>(не доступно в проде)
 
 ---
 
